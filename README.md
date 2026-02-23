@@ -80,7 +80,20 @@
   ```rust
   let r: u8 = u8::try_from(256i16).unwrap_err(); // 超出範圍
   ```
-- **AsRef / AsMut**：廉價的引用轉引用，讓函式參數更通用。
+- **AsRef / AsMut**：廉價的引用轉引用。讓函式能接收任何「可以看作是某種引用」的型別。
+  ```rust
+  // AsRef: 讓函式同時支援 String, &str 或 Path
+  fn open_file<P: AsRef<Path>>(path: P) {
+      let path = path.as_ref();
+      // ...
+  }
+
+  // AsMut: 常用於修改 Box 或內容物
+  fn num_sq<T: AsMut<u32>>(arg: &mut T) {
+      let val = arg.as_mut();
+      *val *= *val;
+  }
+  ```
 
 ## 11. Clippy 最佳實踐 📎
 - **避免 check-then-unwrap**：直接用 `if let Some(x) = opt`。
